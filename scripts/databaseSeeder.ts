@@ -12,38 +12,41 @@ async function createTables() {
   const connection = await mysql.createConnection(dbConfig);
 
   try {
-    // Users table
+    // await connection.execute(`
+    //   DROP TABLE IF EXISTS users, posts, comments;
+    // `);
+    // users table
     await connection.execute(`
-      CREATE TABLE IF NOT EXISTS Users (
-        UserID INT AUTO_INCREMENT PRIMARY KEY,
-        Username VARCHAR(255) NOT NULL UNIQUE,
-        Email VARCHAR(255) NOT NULL UNIQUE,
-        Password VARCHAR(255) NOT NULL
+      CREATE TABLE IF NOT EXISTS users (
+        userId INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL UNIQUE,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL
       );
     `);
 
-    // Posts table
+    // posts table
     await connection.execute(`
-      CREATE TABLE IF NOT EXISTS Posts (
-        PostID INT AUTO_INCREMENT PRIMARY KEY,
-        Title VARCHAR(255) NOT NULL,
-        Content TEXT NOT NULL,
-        UserID INT,
-        Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (UserID) REFERENCES Users(UserID)
+      CREATE TABLE IF NOT EXISTS posts (
+        postId INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        content TEXT NOT NULL,
+        userId INT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (userId) REFERENCES users(userId)
       );
     `);
 
-    // Comments table
+    // comments table
     await connection.execute(`
-      CREATE TABLE IF NOT EXISTS Comments (
-        CommentID INT AUTO_INCREMENT PRIMARY KEY,
-        Content TEXT NOT NULL,
-        UserID INT,
-        PostID INT,
-        Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (UserID) REFERENCES Users(UserID),
-        FOREIGN KEY (PostID) REFERENCES Posts(PostID)
+      CREATE TABLE IF NOT EXISTS comments (
+        commentId INT AUTO_INCREMENT PRIMARY KEY,
+        content TEXT NOT NULL,
+        userId INT,
+        postId INT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (userId) REFERENCES users(userId),
+        FOREIGN KEY (postId) REFERENCES posts(postId)
       );
     `);
 

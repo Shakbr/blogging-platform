@@ -10,12 +10,12 @@ export interface Comment {
 }
 
 export const createComment = async (content: string, userId: number, postId: number): Promise<void> => {
-  const query = 'INSERT INTO Comments (Content, UserID, PostID) VALUES (?, ?, ?)';
+  const query = 'INSERT INTO comments (content, userID, postID) VALUES (?, ?, ?)';
   await pool.execute(query, [content, userId, postId]);
 };
 
 export const getCommentsByPost = async (postId: number): Promise<RowDataPacket[]> => {
-  const query = 'SELECT * FROM Comments WHERE PostID = ?';
+  const query = 'SELECT * FROM comments WHERE postID = ?';
   const [comments] = await pool.execute<RowDataPacket[]>(query, [postId]);
   return comments;
 };

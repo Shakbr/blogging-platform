@@ -1,11 +1,16 @@
-import { userCreationValidation } from './../validations/validations';
+import { loginValidation, userCreationValidation } from './../validations/validations';
 import express from 'express';
-import { fetchTopCommenters, createUser } from '../controllers/userController';
+import { fetchTopCommenters, registerUser, loginUser } from '../controllers/userController';
+import { auth } from '@/middleware/authMiddleware';
 
 const router = express.Router();
 
-router.get('/top-commenters', fetchTopCommenters);
+// Public routes
+router.post('/login', loginValidation, loginUser);
+router.post('/register', userCreationValidation, registerUser);
 
-router.post('/', userCreationValidation, createUser);
+// Grouping authenticated routes
+router.use(auth);
+router.get('/top-commenters', fetchTopCommenters);
 
 export default router;

@@ -5,7 +5,7 @@ import commentRoutes from './commentRoutes';
 
 const router = express.Router();
 
-router.use('/users', userRoutes);
+router.use('/user', userRoutes);
 router.use('/posts', postRoutes);
 router.use('/comments', commentRoutes);
 
