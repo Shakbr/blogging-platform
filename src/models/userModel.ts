@@ -11,6 +11,8 @@ export interface User {
   password: string;
 }
 
+type ValidParams = string | number;
+
 export const createUser = async (user: User): Promise<void> => {
   const { username, email, password } = user;
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -18,9 +20,18 @@ export const createUser = async (user: User): Promise<void> => {
   await pool.execute(query, [username, email, hashedPassword]);
 };
 
-export const userExists = async (email: string): Promise<boolean> => {
-  const [rows] = await pool.execute<RowDataPacket[]>('SELECT * FROM Users WHERE Email = ?', [email]);
+const checkUserExists = async (condition: string, params: ValidParams[]): Promise<boolean> => {
+  const query = `SELECT * FROM Users WHERE ${condition}`;
+  const [rows] = await pool.execute<RowDataPacket[]>(query, params);
   return rows.length > 0;
+};
+
+export const userExists = async (email: string): Promise<boolean> => {
+  return checkUserExists('Email = ?', [email]);
+};
+
+export const userExistsByID = async (userID: number): Promise<boolean> => {
+  return checkUserExists('UserID = ?', [userID]);
 };
 
 export const getTopCommenters = async (): Promise<TopCommenter[]> => {
