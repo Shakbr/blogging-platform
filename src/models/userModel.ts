@@ -1,4 +1,3 @@
-// src/models/userModel.ts
 import { RowDataPacket } from 'mysql2';
 import pool from '../config/dbConfig';
 import { TopCommenter } from '../types/types';
@@ -16,37 +15,48 @@ type ValidParams = string | number;
 export const createUser = async (user: User): Promise<void> => {
   const { username, email, password } = user;
   const hashedPassword = await bcrypt.hash(password, 10);
-  const query = 'INSERT INTO Users (Username, Email, Password) VALUES (?, ?, ?)';
+  const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
   await pool.execute(query, [username, email, hashedPassword]);
 };
 
 const checkUserExists = async (condition: string, params: ValidParams[]): Promise<boolean> => {
-  const query = `SELECT * FROM Users WHERE ${condition}`;
+  const query = `SELECT * FROM users WHERE ${condition}`;
   const [rows] = await pool.execute<RowDataPacket[]>(query, params);
   return rows.length > 0;
 };
 
+export const findByEmail = async (email: string): Promise<User | null> => {
+  const exists = await userExists(email);
+  if (!exists) {
+    return null;
+  }
+
+  const query = 'SELECT * FROM users WHERE email = ? LIMIT 1';
+  const [rows] = await pool.execute<RowDataPacket[]>(query, [email]);
+  return rows[0] as User;
+};
+
 export const userExists = async (email: string): Promise<boolean> => {
-  return checkUserExists('Email = ?', [email]);
+  return checkUserExists('email = ?', [email]);
 };
 
 export const userExistsByID = async (userID: number): Promise<boolean> => {
-  return checkUserExists('UserID = ?', [userID]);
+  return checkUserExists('userID = ?', [userID]);
 };
 
 export const getTopCommenters = async (): Promise<TopCommenter[]> => {
   const query = `
         SELECT
-            Users.Username,
-            COUNT(Comments.CommentID) AS CommentCount
+            users.username,
+            COUNT(comments.commentId) AS commentCount
         FROM
-            Users
+            users
         JOIN
-            Comments ON Users.UserID = Comments.UserID
+            comments ON users.userId = comments.userId
         GROUP BY
-            Users.UserID
+            users.UserId
         ORDER BY
-            CommentCount DESC
+            commentCount DESC
         LIMIT 5;
     `;
 

@@ -6,11 +6,13 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import validateEnv from '@utils/validateEnv';
 import routes from './routes';
+import cors from 'cors';
 
 validateEnv();
 
 const ExpressConfig = (): Application => {
   const app = express();
+  app.use(cors());
   app.use(compression());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());

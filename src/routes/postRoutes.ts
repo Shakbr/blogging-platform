@@ -1,13 +1,16 @@
 import express from 'express';
 import * as postController from '../controllers/postController';
-import { fetchPostsByUserValidation, postCreationValidation } from '@/validations/validations';
+import { postCreationValidation } from '@/validations/validations';
+import { auth } from '@/middleware/authMiddleware';
 
 const router = express.Router();
 
-router.post('/', postCreationValidation, postController.createPost);
-
+// Public routes
 router.get('/', postController.fetchAllPostsWithComments);
 
-router.get('/user/:userId', fetchPostsByUserValidation, postController.fetchPostsByUser);
+// Grouping authenticated routes
+router.use(auth);
+router.post('/', postCreationValidation, postController.createPost);
+router.get('/user/:userId', postController.fetchPostsByUser);
 
 export default router;
