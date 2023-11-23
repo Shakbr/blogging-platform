@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv';
+import 'dotenv/config';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import express, { Application } from 'express';
@@ -7,7 +7,6 @@ import morgan from 'morgan';
 import validateEnv from '@utils/validateEnv';
 import routes from './routes';
 
-dotenv.config();
 validateEnv();
 
 const ExpressConfig = (): Application => {
@@ -20,7 +19,7 @@ const ExpressConfig = (): Application => {
   app.use(cookieParser());
   app.use(morgan('dev'));
 
-  app.use(routes);
+  app.use('/api', routes);
 
   return app;
 };
