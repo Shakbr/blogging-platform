@@ -26,3 +26,54 @@ export const createPost = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error creating post' });
   }
 };
+
+export const fetchAllPostsWithComments = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const results = await postModel.getAllPostsWithComments();
+    const posts = {};
+
+    results.forEach((row) => {
+      if (!posts[row.PostID]) {
+        posts[row.PostID] = {
+          PostID: row.PostID,
+          Title: row.Title,
+          Content: row.Content,
+          UserID: row.UserID,
+          Timestamp: row.Timestamp,
+          Comments: [],
+        };
+      }
+      if (row.CommentID) {
+        posts[row.PostID].Comments.push({
+          CommentID: row.CommentID,
+          Content: row.CommentContent,
+          UserID: row.CommentUserID,
+          Timestamp: row.CommentTimestamp,
+        });
+      }
+    });
+
+    res.json(Object.values(posts));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+export const fetchPostsByUser = async (req: Request, res: Response) => {
+  const error = validationResult(req);
+  if (!error.isEmpty()) {
+    return res.status(400).json({ errors: error.array() });
+  }
+  const userId = parseInt(req.params.userId, 10);
+  if (isNaN(userId)) {
+    return res.status(400).json({ message: 'Invalid user ID' });
+  }
+  try {
+    const userPosts = await postModel.getPostsByUser(userId);
+    res.json(userPosts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};

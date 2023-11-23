@@ -1,4 +1,4 @@
-import { userCreationValidation } from './../validations/userValidations';
+import { userCreationValidation } from './../validations/validations';
 import express from 'express';
 import { fetchTopCommenters, createUser } from '../controllers/userController';
 

@@ -1,5 +1,4 @@
-// src/validations/userValidations.ts
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 
 export const userCreationValidation = [
   body('username').trim().notEmpty().withMessage('Username is required'),
@@ -12,3 +11,12 @@ export const postCreationValidation = [
   body('content').trim().notEmpty().withMessage('Content is required'),
   body('userID').isNumeric().withMessage('Valid UserID is required'),
 ];
+
+export const commentCreationValidation = [
+  body('content').trim().notEmpty().withMessage('Content is required'),
+  body('userID').isNumeric().withMessage('Valid UserID is required'),
+  body('postID').isNumeric().withMessage('Valid PostID is required'),
+  body('timestamp').isISO8601().withMessage('Valid timestamp is required'),
+];
+
+export const fetchPostsByUserValidation = [param('userId').isNumeric().withMessage('Valid UserID is required')];
