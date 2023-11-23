@@ -2,13 +2,26 @@
 import { RowDataPacket } from 'mysql2';
 import pool from '../config/dbConfig';
 import { TopCommenter } from '../types/types';
+import bcrypt from 'bcrypt';
 
 export interface User {
-  userID: number;
+  userID?: number;
   username: string;
   email: string;
   password: string;
 }
+
+export const createUser = async (user: User): Promise<void> => {
+  const { username, email, password } = user;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const query = 'INSERT INTO Users (Username, Email, Password) VALUES (?, ?, ?)';
+  await pool.execute(query, [username, email, hashedPassword]);
+};
+
+export const userExists = async (email: string): Promise<boolean> => {
+  const [rows] = await pool.execute<RowDataPacket[]>('SELECT * FROM Users WHERE Email = ?', [email]);
+  return rows.length > 0;
+};
 
 export const getTopCommenters = async (): Promise<TopCommenter[]> => {
   const query = `
