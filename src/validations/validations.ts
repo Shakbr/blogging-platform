@@ -23,3 +23,5 @@ export const commentCreationValidation = [
 ];
 
 export const fetchPostsByUserValidation = [param('userId').isNumeric().withMessage('Valid UserID is required')];
+
+export const likePostValidation = [param('postId').isNumeric().withMessage('Valid PostID is required')];

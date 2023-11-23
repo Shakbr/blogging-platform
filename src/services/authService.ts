@@ -1,4 +1,3 @@
-// src/services/authService.ts
 import * as userModel from '../models/userModel';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -25,5 +24,6 @@ export const authenticateUser = async (email: string, password: string): Promise
     return null;
   }
 
+  delete user.password;
   return { user, token: generateToken(user.userId, user.email) };
 };
