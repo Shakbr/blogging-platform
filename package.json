@@ -8,7 +8,8 @@
     "start": "npm run build && node dist/server.js",
     "build": "tsc && tsc-alias",
     "lint": "eslint src/**/*.ts",
-    "format": "eslint src/**/*.ts --fix"
+    "format": "eslint src/**/*.ts --fix",
+    "seed": "ts-node -r dotenv/config ./scripts/databaseSeeder.ts"
   },
   "husky": {
     "hooks": {
@@ -27,7 +28,8 @@
     "envalid": "^8.0.0",
     "express": "^4.18.2",
     "helmet": "^7.1.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.5"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",

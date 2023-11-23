@@ -5,6 +5,7 @@ import express, { Application } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import validateEnv from '@utils/validateEnv';
+import routes from './routes';
 
 dotenv.config();
 validateEnv();
@@ -18,6 +19,8 @@ const ExpressConfig = (): Application => {
   app.use(helmet());
   app.use(cookieParser());
   app.use(morgan('dev'));
+
+  app.use(routes);
 
   return app;
 };
