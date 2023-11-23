@@ -25,5 +25,5 @@ export const authenticateUser = async (email: string, password: string): Promise
     return null;
   }
 
-  return { user, token: generateToken(user.userID, user.email) };
+  return { user, token: generateToken(user.userId, user.email) };
 };

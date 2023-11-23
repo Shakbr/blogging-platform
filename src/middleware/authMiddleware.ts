@@ -1,5 +1,6 @@
 import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
 import { Response, NextFunction } from 'express';
+import { AuthRequest } from '@/types/types';
 
 export const JWT_SECRET_KEY: Secret = process.env.JWT_SECRET as Secret;
 

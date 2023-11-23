@@ -50,6 +50,17 @@ async function createTables() {
       );
     `);
 
+    await connection.execute(`
+    CREATE TABLE postLikes (
+      likeId INT AUTO_INCREMENT PRIMARY KEY,
+      postId INT,
+      userId INT,
+      FOREIGN KEY (postId) REFERENCES posts(postId),
+      FOREIGN KEY (userId) REFERENCES users(userId),
+      UNIQUE (postId, userId)
+    );
+    `);
+
     console.log('Tables created successfully');
   } catch (error) {
     console.error('Error creating tables:', error);
