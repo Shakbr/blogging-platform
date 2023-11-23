@@ -112,7 +112,7 @@ You can test the API endpoints using tools like Postman or cURL. Example request
 
 - `POST /user/login`
 
--     Body:
+Body:
 
 ```json
 {
@@ -123,7 +123,7 @@ You can test the API endpoints using tools like Postman or cURL. Example request
 
 ### Register
 
-POST /user/register
+- `POST /user/register`
 
 Body:
 
