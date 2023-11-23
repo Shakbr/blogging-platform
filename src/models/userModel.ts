@@ -4,7 +4,7 @@ import { TopCommenter } from '../types/types';
 import bcrypt from 'bcrypt';
 
 export interface User {
-  userID?: number;
+  userId?: number;
   username: string;
   email: string;
   password: string;
@@ -41,7 +41,7 @@ export const userExists = async (email: string): Promise<boolean> => {
 };
 
 export const userExistsByID = async (userID: number): Promise<boolean> => {
-  return checkUserExists('userID = ?', [userID]);
+  return checkUserExists('userId = ?', [userID]);
 };
 
 export const getTopCommenters = async (): Promise<TopCommenter[]> => {

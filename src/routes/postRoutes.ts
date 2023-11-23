@@ -1,6 +1,6 @@
 import express from 'express';
 import * as postController from '../controllers/postController';
-import { postCreationValidation } from '@/validations/validations';
+import { fetchPostsByUserValidation, postCreationValidation } from '@/validations/validations';
 import { auth } from '@/middleware/authMiddleware';
 
 const router = express.Router();
@@ -11,6 +11,6 @@ router.get('/', postController.fetchAllPostsWithComments);
 // Grouping authenticated routes
 router.use(auth);
 router.post('/', postCreationValidation, postController.createPost);
-router.get('/user/:userId', postController.fetchPostsByUser);
+router.get('/user/:userId', fetchPostsByUserValidation, postController.fetchPostsByUser);
 
 export default router;
