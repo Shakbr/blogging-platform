@@ -1,3 +1,4 @@
+import { Post } from './../models/postModel';
 import { Request, Response } from 'express';
 import * as postModel from '../models/postModel';
 import { validationResult } from 'express-validator';
@@ -14,7 +15,9 @@ export const createPost = async (req: AuthRequest, res: Response) => {
 
     const userId = req.user?.userId as number;
 
-    await postModel.createPost({ title, content, userId });
+    const newPost: Post = { title, content, userId };
+
+    await postModel.createPost(newPost);
 
     res.status(201).json({ message: 'Post created successfully' });
   } catch (error) {
@@ -25,38 +28,16 @@ export const createPost = async (req: AuthRequest, res: Response) => {
 
 export const fetchAllPostsWithComments = async (req: Request, res: Response): Promise<void> => {
   try {
-    const results = await postModel.getAllPostsWithComments();
-    const posts = {};
+    const postsWithComment = await postModel.getAllPostsWithComments();
 
-    results.forEach((row) => {
-      if (!posts[row.postId]) {
-        posts[row.postId] = {
-          postId: row.postId,
-          title: row.title,
-          content: row.content,
-          userId: row.userId,
-          timestamp: row.timestamp,
-          comments: [],
-        };
-      }
-      if (row.commentId) {
-        posts[row.postId].comments.push({
-          commentId: row.commentId,
-          content: row.commentContent,
-          userId: row.commentUserId,
-          timestamp: row.commentTimestamp,
-        });
-      }
-    });
-
-    res.json(Object.values(posts));
+    res.json(postsWithComment);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
 
-export const fetchPostsByUser = async (req: Request, res: Response) => {
+export const fetchPostsByUser = async (req: AuthRequest, res: Response) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
     return res.status(400).json({ errors: error.array() });
@@ -71,5 +52,18 @@ export const fetchPostsByUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
+  }
+};
+
+export const likePost = async (req: AuthRequest, res: Response) => {
+  try {
+    const postId = parseInt(req.params.postId);
+    const userId = req.user!.userId;
+
+    await postModel.addLike(postId, userId);
+    res.status(200).json({ message: 'Post liked successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error liking post');
   }
 };

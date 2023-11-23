@@ -4,6 +4,7 @@ import * as commentModel from '../models/commentModel';
 import { validationResult } from 'express-validator';
 import * as postModel from '../models/postModel';
 import { AuthRequest } from '@/types/types';
+import { Comment } from '../models/commentModel';
 
 export const createComment = async (req: AuthRequest, res: Response) => {
   const errors = validationResult(req);
@@ -21,7 +22,9 @@ export const createComment = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: 'Post not found' });
     }
 
-    await commentModel.createComment(content, userId, postId);
+    const newComment: Comment = { content, userId, postId };
+
+    await commentModel.createComment(newComment);
     res.status(201).json({ message: 'Comment created successfully' });
   } catch (error) {
     console.error(error);

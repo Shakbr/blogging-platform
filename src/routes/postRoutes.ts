@@ -12,5 +12,6 @@ router.get('/', postController.fetchAllPostsWithComments);
 router.use(auth);
 router.post('/', postCreationValidation, postController.createPost);
 router.get('/user/:userId', fetchPostsByUserValidation, postController.fetchPostsByUser);
+router.post('/like/:postId', postController.likePost);
 
 export default router;

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon",
     "start": "npm run build && node dist/server.js",
+    "tsc": "tsc",
     "build": "tsc && tsc-alias",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
