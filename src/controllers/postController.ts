@@ -49,7 +49,6 @@ export const fetchPostsByUser = async (req: AuthRequest, res: Response) => {
 export const likePost = async (req: AuthRequest, res: Response) => {
   try {
     const postId = parseInt(req.params.postId);
-    console.log(postId);
 
     const userId = req.user!.userId;
 
