@@ -56,12 +56,15 @@ export const fetchAllPostsWithComments = async (req: Request, res: Response): Pr
   }
 };
 
-export const fetchPostsByUser = async (req: AuthRequest, res: Response) => {
+export const fetchPostsByUser = async (req: Request, res: Response) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
     return res.status(400).json({ errors: error.array() });
   }
-  const userId = req.user?.userId as number;
+  const userId = parseInt(req.params.userId, 10);
+  if (isNaN(userId)) {
+    return res.status(400).json({ message: 'Invalid user ID' });
+  }
   try {
     const userPosts = await postModel.getPostsByUser(userId);
     res.json(userPosts);
